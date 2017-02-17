@@ -307,29 +307,30 @@ namespace cinder { namespace qtime {
 		return isHapQ() ? MovieGlHap::Obj::sHapQShader : mObj->mDefaultShader;
 	}
 	
-	void MovieGlHap::draw()
+	void MovieGlHap::draw(Rectf bounds)
 	{
 		updateFrame();
-		
+
 		mObj->lock();
-		if( mObj->mTexture ) {
-			Rectf centeredRect = Rectf( mObj->mTexture->getBounds() ).getCenteredFit( app::getWindowBounds(), true );
-			gl::color( Color::white() );
-			
+		if (mObj->mTexture) {
+			Rectf centeredRect = Rectf(mObj->mTexture->getBounds()).getCenteredFit(bounds, true);
+			gl::color(Color::white());
+
 			auto drawRect = [&]() {
-				gl::ScopedTextureBind tex( mObj->mTexture );
+				gl::ScopedTextureBind tex(mObj->mTexture);
 				float cw = mObj->mTexture->getWidth();
 				float ch = mObj->mTexture->getHeight();
-				float w = mObj->mTexture->getWidth();
-				float h = mObj->mTexture->getHeight();
-				gl::drawSolidRect( centeredRect, vec2( 0, 0 ), vec2( cw / w, ch / h ) );
+				float w = mObj->mTexture->getActualWidth();
+				float h = mObj->mTexture->getActualHeight();
+				gl::drawSolidRect(centeredRect, vec2(0, 0), vec2(cw / w, ch / h));
 			};
-			
-			if( isHapQ() ) {
-				gl::ScopedGlslProg bind( MovieGlHap::Obj::sHapQShader );
+
+			if (isHapQ()) {
+				gl::ScopedGlslProg bind(MovieGlHap::Obj::sHapQShader);
 				drawRect();
-			} else {
-				gl::ScopedGlslProg bind( mObj->mDefaultShader );
+			}
+			else {
+				gl::ScopedGlslProg bind(mObj->mDefaultShader);
 				drawRect();
 			}
 		}

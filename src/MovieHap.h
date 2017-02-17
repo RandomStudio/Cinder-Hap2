@@ -34,7 +34,7 @@ namespace cinder { namespace qtime {
 		
 		gl::Texture2dRef getTexture();
 		gl::GlslProgRef getGlsl() const;
-		void draw();
+		void draw(Rectf bounds);
 		
 		bool			isHap() const { return mCodec == Codec::HAP; }
 		bool			isHapA() const { return mCodec == Codec::HAP_A; }
